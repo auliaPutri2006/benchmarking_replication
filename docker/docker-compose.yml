@@ -1,0 +1,39 @@
+services:
+  primary:
+    image: postgres:13
+    container_name: pg_primary
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: marketplace
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./primary/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./primary/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ../dataset:/dataset:ro
+      - ../scripts:/scripts:ro
+      - primary_data:/var/lib/postgresql/data
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    networks: [pgnet]
+
+  standby:
+    image: postgres:13
+    container_name: pg_standby
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./standby/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ../scripts:/scripts:ro
+      - standby_data:/var/lib/postgresql/data
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    networks: [pgnet]
+    depends_on: [primary]
+
+networks:
+  pgnet:
+
+volumes:
+  primary_data:
+  standby_data:

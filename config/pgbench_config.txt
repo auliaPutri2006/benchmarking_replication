@@ -1,0 +1,15 @@
+# Konfigurasi untuk pgbench
+# Scale factor diset ke 5, agar tidak terlalu berat untuk sistem dengan RAM 16GB
+-s 5
+
+# Menjalankan benchmark selama 10 menit (600 detik)
+-T 600
+
+# Jumlah koneksi (clients) diset ke 10 untuk pengujian lebih ringan
+-c 10
+
+# Menjalankan 2 threads
+-j 2
+
+# Menggunakan mode standar untuk operasi: INSERT, UPDATE, SELECT
+# Dengan scale factor yang lebih kecil, operasi ini tidak akan membebani sistem
